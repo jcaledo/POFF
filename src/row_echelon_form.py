@@ -16,67 +16,65 @@ from Zmod import get_canonical
 ## ------------------------------ ##
 ##      find_nonzero_row          ##
 ## ------------------------------ ##
-"""
-usage:  find_nonzero_row(matrix, pivot_row, col) 
-matrix: a matrix (numpy.ndarray)
-pivot_row: row for which we are searching a pivot
-col: column in which we are searching the pivot
-return: either an integer corresponding to the row containing the 
-        first nonzero value (pivot) or None if any has been found
-example: find_nonzero_row(matrix = np.array([[0,2],[2,1]]), 
-                 pivot_row = 0, 
-                 col = 0)
-
-"""
 def find_nonzero_row(matrix, pivot_row, col): 
+    """Finds the index of the non-zero pivot closest to 
+        matrix(pivot_row, col).
+
+    Args:
+        matrix (numpy.ndarray): a matrix
+        pivot_row (int): index of the pivot row
+        col (int): index of the column
+
+    Returns:
+        int: index of the row where the first non-zero pivot 
+            is found. If any, the function returns 'None'. 
+    """
     nrows = matrix.shape[0] 
     for row in range(pivot_row, nrows):
         if matrix[row, col] != 0: 
             return row 
     return None
 
+
 ## ------------------------------ ##
-##      swap_rows          ##
-## ------------------------------ ##
-"""
-usage:  swap_rows(matrix, row1, row2) 
-matrix: a matrix (numpy.ndarray)
-row1: first row to be interchanged
-row2: second row to be interchanged
-return: in the matrix, row1 will occupy the place of row2 
-        and vice versa
-example: swap_rows(matrix = np.array([[0,2],[2,1]]), 
-                                    row1 = 0, row2 = 1)
-"""
+##           swap_rows            ##
+## ------------------------------ ##                         
 def swap_rows(matrix, row1, row2):
-    matrix[row1], matrix[row2] = matrix[row2], matrix[row1]
+    """Interchanges the indicated rows in the given matrix.
+
+    Args:
+        matrix (numpy.ndarray): matrix
+        row1 (int): index of the first row
+        row2 (int): index of the second row
+    """
+    matrix[[row1,row2]] = matrix[[row2,row1]]
 
 ## ------------------------------ ##
 ##       make_pivot_one           ##
 ## ------------------------------ ##
-"""
-usage: make_pivot_one(matrix, pivot_row, col, mod = None) 
-matrix: a matrix (numpy.ndarray)
-pivot_row: index of the pivot_row 
-col: index of the col where the pivot is found
-mod: if different to None, it should be a positive integer. Then,
-     the elements of the matriz are converted to their canonical
-     representatives in the indicated mod
-return: in the matrix, the pivot row is normalized
-example: makes_pivot_one(matrix = np.array([[2,2],[2,1]]), 
-                                    pivot_row = 0, col = 0)
-"""
 def make_pivot_one(matrix, pivot_row, col, mod = None):
+    """Modifies in place the given matrix to normalize the pivot row in order
+        to have 1 as the pivot value. 
+
+    Args:
+        matrix (numpy.ndarray): a matrix
+        pivot_row (int): the index of the pivot row
+        col (int): the index of the pivot column
+        mod (int, optional): modulo. Defaults to None.
+
+    """
     if mod == None:
         pivot = matrix[pivot_row, col]
         matrix[pivot_row] //= pivot
     elif type(mod) is int:
         pivot_inv = get_inv(matrix[pivot_row, col], mod)
         matrix[pivot_row] *= pivot_inv
-        matrix[pivot_row] = get_canonical(matrix[pivot_row], mod)
+        M = get_canonical(matrix, mod)
+        for i in range(M.shape[0]):
+            matrix[i] = M[i]  
     else:
         sys.exit("The mod should be a positive integer")
-    
+  
 ## ------------------------------ ##
 ##      make_zero_below           ##
 ## ------------------------------ ##
@@ -89,18 +87,22 @@ return: in the matrix, the entry below the pivot are eliminated
 example: makes_zero_below(matrix = np.array([[2,2],[2,1]]), 
                                     pivot_row = 0, col = 0)
 """
-def make_zero_below(matrix, pivot_row, col):
+
+def make_zero_below(matrix, pivot_row, col, mod = None):
     """_summary_
 
     Args:
         matrix (_type_): _description_
         pivot_row (_type_): _description_
         col (_type_): _description_
-    """
-    nrow = matrix.shape[0]
-    for row in range(pivot_row + 1, nrow):
-        factor = matrix[row, col]
-        matrix[row] -= factor * matrix[pivot_row]
+        mod (_type_, optional): _description_. Defaults to None.
+
+    if mod == None:
+        nrow = matrix.shape[0]
+        for row in range(pivot_row + 1, nrow):
+            factor = matrix[row, col]
+            matrix[row] -= factor * matrix[pivot_row]
+    else:
 
 
 ## ------------------------------ ##
@@ -123,3 +125,17 @@ def get_ref(matrix):
 A = np.array([[2,1,1,1],[2,1,1,1],[2,1,1,1],[1,2,2,0]])
 
 print(make_pivot_one(A, 1, 0, 3))
+
+
+
+
+M = np.array([[ 2, -2,  4, -2],
+                  [ 2,  1, 10,  7],
+                  [-4,  4, -8,  4],
+                  [4, -1, 14,  6]])
+
+make_pivot_one(M, 0, 0, 3)
+
+print("----------\n", M)
+
+"""

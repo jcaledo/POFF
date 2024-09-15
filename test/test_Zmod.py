@@ -1,5 +1,6 @@
 import sys
 import os
+sys.path.append(os.path.abspath("/Users/jcaledo/Py_pkgs/POFF/src"))
 import numpy as np
 import Zmod as zm
 # Add the src directory to sys.path:
@@ -14,7 +15,6 @@ def test_get_canonical():
        [2, 1, 1, 1],
        [2, 1, 1, 1],
        [1, 2, 2, 0]]))
-
 
 def test_get_gcd():
     assert zm.get_gcd(7, 5) == (1, -2, 3)
