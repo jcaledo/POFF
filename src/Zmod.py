@@ -36,14 +36,16 @@ def get_canonical(matrix, mod):
 ## ------------------------------ ##
 ##            get_gcd             ##
 ## ------------------------------ ##
-""" 
-usage: get_gcd(a, b)
-a: integer
-b: integer
-example: get_gcd(7, 5) 
-return: a 3-tuple (gcd, x, y) such that gcd = ax + byso
-"""
 def get_gcd(a, b):
+    """Finds the greatest common divisor of two integers
+
+    Args:
+        a (int): an integer
+        b (int): an integer
+
+    Returns:
+       A 3-tuple (gcd, x, y) such that gcd = ax + by
+    """
     if b == 0:
         return a, 1, 0
     gcd, x1, y1 = get_gcd(b, a%b)
@@ -54,14 +56,16 @@ def get_gcd(a, b):
 ## ------------------------------ ##
 ##          get_inv               ##
 ## ------------------------------ ##
-"""
-usage: get_inv(x, mod)
-n: integer whose multiplicative inverse we want to find
-mod: module (it should be a positive integer)
-return: an integer being the inverse of n in the corresponding module
-example: get_inv(3, 7) 
-"""
 def get_inv(n, mod):
+    """Get the multiplicative inverse of an integer given a modulo. 
+
+    Args:
+        n (int): integer whose inverse we want to find
+        mod (int): modulo
+
+    Returns:
+        An integer that is the modular inverse of n. If n and mod are not coprime, then n does not have inverse.
+    """
     gcd, x, y = get_gcd(n, mod)
     if gcd != 1:
         sys.exit(f"\n the integer {n} and the mod {mod} are not co-prime \n")

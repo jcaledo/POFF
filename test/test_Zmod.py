@@ -1,11 +1,8 @@
 import sys
 import os
-sys.path.append(os.path.abspath("/Users/jcaledo/Py_pkgs/POFF/src"))
+sys.path.append("/Users/jcaledo/Py_pkgs/POFF/src")
 import numpy as np
 import Zmod as zm
-# Add the src directory to sys.path:
-# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-
 
 def test_get_canonical():
     assert np.array_equal(zm.get_canonical(matrix = np.array([[ 2, -2,  4, -2],
